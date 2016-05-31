@@ -13,7 +13,7 @@ const listenables = [];
 function onEvent(type, event) {
   const listenable = listenables[listenables.length - 1]; // Get the last listenable
   if (listenable) {
-    const { handler } = listenable.get(type);
+    const handler = listenable.stack.get(type);
     if (typeof handler == 'function') {
       handler(event);
     }
@@ -24,8 +24,8 @@ const EventStack = {
   addListenable(listenArray) {
     /* ex: [['click', clickHandler], ['keydown', keydownHandler]] */
     const id = uniqueEventId();
-    const handler = new Map(listenArray);
-    listenables.push({ id, handler });
+    const stack = new Map(listenArray);
+    listenables.push({ id, stack });
     return id;
   },
   removeListenable(id) {
