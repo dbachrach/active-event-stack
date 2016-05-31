@@ -19,7 +19,6 @@
   "author": "Qiming Weng",
   "license": "MIT",
   "dependencies": {
-    "immutable": "^3.7.4",
     "lodash.uniqueid": "^4.0.0"
   },
   "devDependencies": {

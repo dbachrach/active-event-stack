@@ -1,5 +1,4 @@
-import {OrderedMap, Map} from 'immutable';
-import {uniqueId} from 'lodash';
+import uniqueId from 'lodash.uniqueid';
 
 const uniqueEventId = uniqueId.bind(null, 'active_event_');
 
@@ -9,10 +8,10 @@ if (typeof document != 'undefined') {
   document.addEventListener('keyup', onEvent.bind(null, 'keyup'));
 }
 
-let listenables = OrderedMap();
+const listenables = [];
 
 function onEvent(type, event) {
-  const listenable = listenables.last();
+  const listenable = listenables[listenables.length - 1]; // Get the last listenable
   if (listenable) {
     let handler = listenable.get(type);
     if (typeof handler == 'function') {
@@ -25,12 +24,13 @@ const EventStack = {
   addListenable(listenArray) {
     /* ex: [['click', clickHandler], ['keydown', keydownHandler]] */
     const id = uniqueEventId();
-    const listenable = Map(listenArray);
-    listenables = listenables.set(id, listenable);
+    const listenable = new Map(listenArray);
+    listenables.push({ id, listenable });
     return id;
   },
   removeListenable(id) {
-    listenables = listenables.delete(id);
+    const index = listenables.findIndex(el => el.id === id);
+    listenables.splice(index, 1);
   }
 };
 
